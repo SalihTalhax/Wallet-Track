@@ -2,8 +2,10 @@ package com.info.wallet_track_app
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Adapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.RecyclerView
 import com.info.wallet_track_app.model.CryptoPrice
 import com.info.wallet_track_app.retrofit.RetrofitApi
 import com.info.wallet_track_app.retrofit.RetrofitBuilder
@@ -16,13 +18,23 @@ class MainActivity : AppCompatActivity() {
     private lateinit var retrofitInstance: Retrofit
     private lateinit var api: RetrofitApi
     private var crypto:CryptoPrice? = null
+   private lateinit var coin_list:ArrayList<coins>
+   private lateinit var adapter:RVAdapter
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        retrofitInstance = RetrofitBuilder.getInstance()!!
+        val myRecy=findViewById<RecyclerView>(R.id.Recy)
 
+
+        retrofitInstance = RetrofitBuilder.getInstance()!!
         getCoinPrices()
+
+
+
     }
 
     private fun getCoinPrices() {
@@ -37,7 +49,7 @@ class MainActivity : AppCompatActivity() {
         api.getCryptoPrice(data)!!.enqueue(object : Callback<CryptoPrice?> {
             override fun onResponse(call: Call<CryptoPrice?>, response: Response<CryptoPrice?>) {
                 crypto = response.body()
-                populateUI()
+
             }
 
             override fun onFailure(call: Call<CryptoPrice?>, t: Throwable) {
