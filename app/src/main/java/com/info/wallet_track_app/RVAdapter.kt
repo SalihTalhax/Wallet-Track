@@ -40,7 +40,7 @@ class RVAdapter(private val mContext:Context,private val coinlist:List<coins>)
         val tel = coinlist[position]
         val pon =coinlist[position]
 
-        holder.satiryazi2.text=pon.coinno
+        holder.satiryazi2.__()=pon.coinno
 
         holder.satiryazi.text= koin.Coinadı
 
