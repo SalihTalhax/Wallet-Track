@@ -4,55 +4,43 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
-import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 
-class RVAdapter(private val mContext:Context,private val coinlist:List<coins>)
-    :RecyclerView.Adapter<RVAdapter.CardViewNesneTutucu>() {
+class RVAdapter(private val mContext: Context) :
+    RecyclerView.Adapter<RVAdapter.CardViewDesignObjectsHolder>() {
 
-    inner class CardViewNesneTutucu(view:View):RecyclerView.ViewHolder(view){
+    private val cryptoList: MutableList<Coin> = ArrayList<Coin>()
 
-    var satirCardView:CardView
-    var satiryazi:TextView
-    var satiryazi2:TextView
-    var resmim:ImageView
-
-    init {
-        satirCardView=view.findViewById(R.id.satirCardView)
-        satiryazi= view.findViewById(R.id.satiryazi)
-        satiryazi2=view.findViewById(R.id.satiryazi2)
-        resmim=view.findViewById(R.id.resmim)
-        }
-
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewDesignObjectsHolder {
+        val itemView: View = LayoutInflater.from(parent.context)
+            .inflate(R.layout.card_tasarim, parent, false)
+        return CardViewDesignObjectsHolder(itemView)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewNesneTutucu {
-
-        val tasarim=LayoutInflater.from(mContext).inflate(R.layout.card_tasarim,parent,false)
-        return CardViewNesneTutucu(tasarim)
-    }
-
-    override fun onBindViewHolder(holder: CardViewNesneTutucu, position: Int) {
-        val koin = coinlist[position]
-        val tel = coinlist[position]
-        val pon =coinlist[position]
-
-        holder.satiryazi2.__()=pon.coinno
-
-        holder.satiryazi.text= koin.Coinadı
-
-        holder.satirCardView.setOnClickListener{
-
-            Toast.makeText( mContext, "Seçtiğiniz Coin:${koin.Coinadı}", Toast.LENGTH_SHORT).show()
-        }
-
+    override fun onBindViewHolder(holder: CardViewDesignObjectsHolder, position: Int) {
+        holder.coinName.text = cryptoList[position].coinName
+        holder.coinPrice.text = cryptoList[position].coinPrice
     }
 
     override fun getItemCount(): Int {
-        return coinlist.size
+        return cryptoList.size
     }
 
+    fun setData(cryptoList: List<Coin>?) {
+        this.cryptoList.clear()
+        this.cryptoList.addAll(cryptoList!!)
+        notifyDataSetChanged()
+    }
+
+    inner class CardViewDesignObjectsHolder(view: View) :
+        RecyclerView.ViewHolder(view) {
+        var coinName: TextView
+        var coinPrice: TextView
+
+        init {
+            coinName = view.findViewById(R.id.satiryazi)
+            coinPrice = view.findViewById(R.id.satiryazi2)
+        }
+    }
 }

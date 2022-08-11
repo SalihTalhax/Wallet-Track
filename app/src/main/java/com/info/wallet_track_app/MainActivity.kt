@@ -2,10 +2,9 @@ package com.info.wallet_track_app
 
 import android.os.Bundle
 import android.util.Log
-import android.widget.Adapter
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.info.wallet_track_app.model.CryptoPrice
 import com.info.wallet_track_app.retrofit.RetrofitApi
 import com.info.wallet_track_app.retrofit.RetrofitBuilder
@@ -17,8 +16,7 @@ import retrofit2.Retrofit
 class MainActivity : AppCompatActivity() {
     private lateinit var retrofitInstance: Retrofit
     private lateinit var api: RetrofitApi
-    private var crypto:CryptoPrice? = null
-   private lateinit var coin_list:ArrayList<coins>
+    private var cryptoList = ArrayList<Coin>()
    private lateinit var adapter:RVAdapter
 
 
@@ -28,6 +26,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val myRecy=findViewById<RecyclerView>(R.id.Recy)
+        myRecy.setHasFixedSize(true)
+        myRecy.layoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
+
+        adapter = RVAdapter(this)
+        myRecy.adapter = adapter
 
 
         retrofitInstance = RetrofitBuilder.getInstance()!!
@@ -48,8 +51,30 @@ class MainActivity : AppCompatActivity() {
 
         api.getCryptoPrice(data)!!.enqueue(object : Callback<CryptoPrice?> {
             override fun onResponse(call: Call<CryptoPrice?>, response: Response<CryptoPrice?>) {
-                crypto = response.body()
+                val crypto = response.body()
 
+                cryptoList.add(Coin("cake", crypto!!.cake!!.usd!!))
+                cryptoList.add(Coin("eos", crypto.eos!!.usd!!))
+                cryptoList.add(Coin("cardano", crypto.cardano!!.usd!!))
+                cryptoList.add(Coin("near", crypto.near!!.usd!!))
+                cryptoList.add(Coin("chainlink", crypto.chainlink!!.usd!!))
+                cryptoList.add(Coin("bitcoin", crypto.bitcoin!!.usd!!))
+                cryptoList.add(Coin("litecoin", crypto.litecoin!!.usd!!))
+                cryptoList.add(Coin("monero", crypto.monero!!.usd!!))
+                cryptoList.add(Coin("binancecoin", crypto.binancecoin!!.usd!!))
+                cryptoList.add(Coin("stellar", crypto.stellar!!.usd!!))
+                cryptoList.add(Coin("ripple", crypto.ripple!!.usd!!))
+                cryptoList.add(Coin("ethereum", crypto.ethereum!!.usd!!))
+                cryptoList.add(Coin("solana", crypto.solana!!.usd!!))
+                cryptoList.add(Coin("algorand", crypto.algorand!!.usd!!))
+                cryptoList.add(Coin("polkadot", crypto.polkadot!!.usd!!))
+                cryptoList.add(Coin("uniswap", crypto.uniswap!!.usd!!))
+                cryptoList.add(Coin("internet-computer", crypto.internetComputer!!.usd!!))
+                cryptoList.add(Coin("tron", crypto.tron!!.usd!!))
+                cryptoList.add(Coin("neutrino", crypto.neutrino!!.usd!!))
+                cryptoList.add(Coin("celo", crypto.celo!!.usd!!))
+
+                populateUI()
             }
 
             override fun onFailure(call: Call<CryptoPrice?>, t: Throwable) {
@@ -59,6 +84,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun populateUI() {
-        // TODO : Elindeki veriyi (crypto) ekrana aktar
+        adapter.setData(cryptoList)
     }
 }
