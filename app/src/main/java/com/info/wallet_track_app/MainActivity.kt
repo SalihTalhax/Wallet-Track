@@ -3,6 +3,8 @@ package com.info.wallet_track_app
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.info.wallet_track_app.model.CryptoPrice
@@ -13,29 +15,33 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 
+
 class MainActivity : AppCompatActivity() {
     private lateinit var retrofitInstance: Retrofit
     private lateinit var api: RetrofitApi
     private var cryptoList = ArrayList<Coin>()
-   private lateinit var adapter:RVAdapter
-
+    private lateinit var adapter: RVAdapter
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val myRecy=findViewById<RecyclerView>(R.id.Recy)
-        myRecy.setHasFixedSize(true)
-        myRecy.layoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
+        val myRecy = findViewById<RecyclerView>(R.id.Recy)
 
+        myRecy.setHasFixedSize(true)
+
+        // RecyclerView'ın ekranda nasıl bir yapısı olacagını belirledigimiz property
+        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        myRecy.layoutManager = layoutManager
+
+        // Ekrana verilerin doğru şekilde girilmesini saplayan sınıf
         adapter = RVAdapter(this)
         myRecy.adapter = adapter
 
 
         retrofitInstance = RetrofitBuilder.getInstance()!!
         getCoinPrices()
-
 
 
     }
@@ -84,6 +90,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun populateUI() {
+        // Verileri adaptöre ilet
         adapter.setData(cryptoList)
     }
 }
