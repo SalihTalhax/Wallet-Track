@@ -1,5 +1,6 @@
 package com.info.wallet_track_app.retrofit
 
+import com.info.wallet_track_app.model.CryptoInfo
 import com.info.wallet_track_app.model.CryptoPrice
 import retrofit2.Call
 import retrofit2.http.GET
@@ -13,5 +14,5 @@ interface RetrofitApi {
     ): Call<CryptoPrice?>?
 
     @GET("coins/{coin_id}")
-    fun getCoinDetails(@Path(value = "coin_id", encoded = true) coinId: String?): Call<>
+    fun getCoinDetails(@Path(value = "coin_id", encoded = true) coinId: String?): Call<CryptoInfo>
 }
